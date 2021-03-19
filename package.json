@@ -1,0 +1,36 @@
+{
+  "name": "ninenine-white-label",
+  "version": "1.0.0",
+  "description": "Este projeto funciona como uma extensão dos projetos White Label criados com **VueJS**. Neste projeto você encontrará Plugins e Vuex Stores que são úteis em todos os sites.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "glightbox": "^1.0.8",
+    "hellojs": "^1.17.1",
+    "tiny-slider": "^2.8.7",
+    "vue": "^2.5.17",
+    "vue-cryptojs": "^2.1.5",
+    "vue-head": "^2.1.0",
+    "vue-session": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://nineninejobs@bitbucket.org/nineninejobs/ninenine-white-label.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/nineninejobs/ninenine-white-label#readme",
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
