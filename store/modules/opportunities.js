@@ -258,6 +258,20 @@ export default {
               company {
                 id
               }
+              events {
+                id
+                opportunityId
+                title
+                date
+                addressId
+                address
+                roomId
+                room
+                scheduleId
+                schedule
+                status
+                confirmedAt
+              }
               ${ getOnlineTests }
             },
 
