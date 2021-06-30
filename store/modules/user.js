@@ -176,6 +176,89 @@ export default {
     },
 
 
+    isEmployer({ rootState }, obj){
+      let params = new URLSearchParams();
+
+      params.append('query', `
+        mutation {
+          isEmployer(
+            ${ obj.email ? ' email: "' + obj.email.toLowerCase() + '" ,' : '' }
+            ${ obj.document ? ' document: "' + obj.document + '" ,' : '' }
+            ${ obj.unique_id ? ' unique_id: "' + obj.unique_id + '" ,' : '' }
+            ${ obj.user_id ? ' user_id: ' + obj.user_id + ' ,' : '' }
+            company_id: ${rootState.companyId}
+          )
+        }
+      `)
+      console.log(`
+      mutation {
+        isEmployer(
+          ${ obj.email ? ' email: "' + obj.email.toLowerCase() + '" ,' : '' }
+          ${ obj.document ? ' document: "' + obj.document + '" ,' : '' }
+          ${ obj.unique_id ? ' unique_id: "' + obj.unique_id + '" ,' : '' }
+          ${ obj.user_id ? ' user_id: ' + obj.user_id + ' ,' : '' }
+          company_id: ${rootState.companyId}
+        )
+      }
+    `);
+
+      return new Promise( (resolve, reject) => {
+        axios.post(Vue.prototype.API_ENDPOINT + "/graphql", params, { headers: { 'Authorization': rootState.tkn } }).then( resp => {
+          const isEmployer = resp.data;
+          resolve(isEmployer)
+        }, error => {
+          reject(error);
+        })
+        .catch(error => {
+          reject(error);
+        })
+      })
+    },
+
+
+    employerSignIn({ commit, dispatch, rootState }, obj){
+      let params = new URLSearchParams();
+      let query = '';
+      let variables = '';
+      const data = `
+      {
+        ${ obj.returns || 'id, name' }
+      }
+      `;
+
+      query = `
+        mutation {
+          employerSignIn(
+            ${ obj.email ? ' email: "' + obj.email.toLowerCase() + '" ,' : '' }
+            ${ obj.document ? ' document: "' + obj.document + '" ,' : '' }
+            ${ obj.unique_id ? ' unique_id: "' + obj.unique_id + '" ,' : '' }
+            password: "${window.btoa(obj.password)}",
+            company_id: ${rootState.companyId}
+          )
+          ${data}
+        }
+      `;
+
+      variables = JSON.stringify({ "encrypt_user_id": true });
+      params.append('query', query);
+      params.append('variables', variables);
+
+      return new Promise( (resolve, reject) => {
+        axios.post(ENDPOINT, params, { headers: { 'Authorization': rootState.tkn }}).then( resp => {
+          const response = resp.data;
+
+          if( !response.error ){
+            const user = response.data.employerSignIn;
+            dispatch('auth', { user: user, keepLogged: obj.keepLogged, hoursLogged: obj.hoursLogged });
+          }
+
+          resolve(response);
+        }, error => {
+          reject(error);
+        })
+      })
+    },
+
 
     signIn({ commit, dispatch, rootState }, obj){
       let params = new URLSearchParams();
@@ -256,6 +339,49 @@ export default {
       })
     },
 
+
+    employerSignUp({ dispatch, rootState }, obj){
+      let params = new URLSearchParams();
+      const data = `
+      {
+        id,
+        name,
+        profile{ id }
+      }
+      `;
+
+      var variables = JSON.stringify({ "encrypt_user_id": true });
+      params.append('variables', variables);
+
+      params.append('query', `
+        mutation {
+          employerSignUp(
+            name: "${obj.first_name} ${obj.last_name}",
+            email: "${obj.email.toLowerCase()}",
+            document: "${obj.document}",
+            ${ obj.unique_id ? ' unique_id: "' + obj.unique_id + '" ,' : '' }
+            password: "${window.btoa(obj.password)}",
+            company_id: ${rootState.companyId},
+          )
+          ${data}
+        }
+      `)
+
+      return new Promise( (resolve, reject) => {
+        axios.post(ENDPOINT, params, { headers: { 'Authorization': rootState.tkn } }).then( resp => {
+          const employerSignUp = resp.data;
+
+          if( !employerSignUp.error ){
+            const user = employerSignUp.data.employerSignUp;
+            dispatch('auth', { user: user, keepLogged: false });
+          }
+
+          resolve(employerSignUp);
+        }, error => {
+          reject(error);
+        })
+      })
+    },
 
 
     signUp({ dispatch, rootState }, obj){
@@ -1100,9 +1226,12 @@ export default {
 
     forgotUser({ rootState }, obj){
       let params = new URLSearchParams();
+      let key = obj.cpf ? 'cpf' : 'passport';
+      let value = obj.cpf ? obj.cpf : obj.passport;
+
       params.append('query', `
         query {
-          users(cpf: "${ obj.cpf }") {
+          users(${key}: "${ value }") {
             email
           }
         }
@@ -1406,6 +1535,110 @@ export default {
       })
     },
 
+    confirmEvent({ rootState }, obj){
+      let params = new URLSearchParams();
+      params.append('query', `
+        mutation {
+          confirmEvent(
+            ${ obj.opportunity_id ? ' opportunity_id: ' + obj.opportunity_id + ' ,' : '' }
+            user_id: ${ rootState.user.profile.id },
+            ${ obj.event_id ? ' event_id: ' + obj.event_id + ' ,' : '' }
+            ${ obj.address_id ? ' address_id: ' + obj.address_id + ' ,' : '' }
+            ${ obj.room_id ? ' room_id: ' + obj.room_id + ' ,' : '' }
+            ${ obj.schedule_id ? ' schedule_id: ' + obj.schedule_id + ' ,' : '' }
+            ${ obj.chosen_date ? ' chosen_date: "' + obj.chosen_date + '" ,' : '' }
+          ){
+            success
+          }
+        }
+      `);
+
+      return new Promise( (resolve, reject) => {
+        axios.post(ENDPOINT, params, { headers: { 'Authorization': rootState.tkn } }).then( resp => {
+          const response = resp.data;
+          resolve(response);
+        }, error => {
+          reject(error);
+        })
+      })
+    },
+
+    refuseEvent({ rootState }, obj){
+      let params = new URLSearchParams();
+      params.append('query', `
+        mutation {
+          refuseEvent(
+            opportunity_id: ${obj.opportunity_id},
+            user_id: ${ rootState.user.profile.id },
+            ${ obj.event_id ? ' event_id: ' + obj.event_id + ' ,' : '' }
+          ){
+            success
+          }
+        }
+      `);
+
+      return new Promise( (resolve, reject) => {
+        axios.post(ENDPOINT, params, { headers: { 'Authorization': rootState.tkn } }).then( resp => {
+          const response = resp.data;
+          resolve(response);
+        }, error => {
+          reject(error);
+        })
+      })
+    },
+
+    cancelEventDecision({ rootState }, obj){
+      let params = new URLSearchParams();
+      params.append('query', `
+        mutation {
+          cancelEventDecision(
+            opportunity_id: ${obj.opportunity_id},
+            user_id: ${ rootState.user.profile.id },
+            ${ obj.event_id ? ' event_id: ' + obj.event_id + ' ,' : '' }
+            ${ obj.address_id ? ' address_id: ' + obj.address_id + ' ,' : '' }
+            ${ obj.room_id ? ' room_id: ' + obj.room_id + ' ,' : '' }
+            ${ obj.schedule_id ? ' schedule_id: ' + obj.schedule_id + ' ,' : '' }
+          ){
+            success
+          }
+        }
+      `);
+
+      return new Promise( (resolve, reject) => {
+        axios.post(ENDPOINT, params, { headers: { 'Authorization': rootState.tkn } }).then( resp => {
+          const response = resp.data;
+          resolve(response);
+        }, error => {
+          reject(error);
+        })
+      })
+    },
+
+    companyInternalRecruitment({ rootState }, obj){
+      let params = new URLSearchParams();
+      params.append('query', `
+        {
+          companyInternalRecruitment(
+            companyId: ${ rootState.companyId }
+          )
+          {
+            loginType,
+            specificDomains,
+            domains
+          }
+        }
+      `);
+
+      return new Promise( (resolve, reject) => {
+        axios.post(ENDPOINT, params, { headers: { 'Authorization': rootState.tkn } }).then( resp => {
+          const response = resp.data;
+
+          resolve(response);
+        }, error => {
+          reject(error);
+        })
+      })
+    },
 
   }
 }

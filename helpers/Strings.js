@@ -80,7 +80,7 @@ HelperString.toTitle = str => {
  *  true | false
  */
 HelperString.isEmail = str => {
-  if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(str)){
+  if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str)){
     return true
   }else{
     return false
@@ -202,10 +202,10 @@ HelperString.censorPhone = string => {
  *  []
  */
 HelperString.allCharactersSame = s => {
-  var n = s.length; 
-  for (var i = 1; i < n; i++) 
-      if (s[i] != s[0]) 
-          return false; 
+  var n = s.length;
+  for (var i = 1; i < n; i++)
+      if (s[i] != s[0])
+          return false;
 
   return true;
 }
@@ -237,7 +237,3 @@ export default {
     Object.defineProperty(Vue.prototype, '$helpers', { value: HelperString })
   }
 }
-
-
-
-
