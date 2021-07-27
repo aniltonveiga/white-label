@@ -31,16 +31,17 @@ Vue.use(Encrypts)
 // Vue.prototype.PLATFORM_TEST = process.env.NODE_ENV == "development" ? "http://localhost:3002" : "https://api-platform-test.99jobs.com"
 // Vue.prototype.OPPORTUNITIES_ENDPOINT = process.env.NODE_ENV == "development" ? "http://localhost:3003" : "https://api-oportunidades.99jobs.com/"
 
-// Vue.prototype.API_ENDPOINT = "https://api.99jobs.com"
-// Vue.prototype.DELTA_ENDPOINT = "https://99jobs.com/"
-// Vue.prototype.PLATFORM_TEST = "https://api-platform-test.99jobs.com"
-// Vue.prototype.OPPORTUNITIES_ENDPOINT = "https://api-oportunidades.99jobs.com/"
+// PROD
+Vue.prototype.API_ENDPOINT = "https://api.99jobs.com"
+Vue.prototype.DELTA_ENDPOINT = "https://99jobs.com/"
+Vue.prototype.PLATFORM_TEST = "https://api-platform-test.99jobs.com"
+Vue.prototype.OPPORTUNITIES_ENDPOINT = "https://api-oportunidades.99jobs.com/"
 
 // STAGING
-Vue.prototype.API_ENDPOINT = "https://staging-api.99jobs.com"
-Vue.prototype.DELTA_ENDPOINT = "https://staging.99jobs.com"
-Vue.prototype.PLATFORM_TEST = "https://staging-api-platform-test.99jobs.com"
-Vue.prototype.OPPORTUNITIES_ENDPOINT = "https://staging-api-oportunidades.99jobs.com"
+// Vue.prototype.API_ENDPOINT = "https://staging-api.99jobs.com"
+// Vue.prototype.DELTA_ENDPOINT = "https://staging.99jobs.com"
+// Vue.prototype.PLATFORM_TEST = "https://staging-api-platform-test.99jobs.com"
+// Vue.prototype.OPPORTUNITIES_ENDPOINT = "https://staging-api-oportunidades.99jobs.com"
 
 // Only console if DEV
 process.env.NODE_ENV == 'development' && console.log("API_ENDPOINT = " + Vue.prototype.API_ENDPOINT)
