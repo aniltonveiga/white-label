@@ -9,7 +9,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "glightbox": "^1.0.8",
-    "hellojs": "^1.17.1",
+    "hellojs": "^1.18.8",
     "tiny-slider": "^2.8.7",
     "vue": "^2.5.17",
     "vue-cryptojs": "^2.1.5",
